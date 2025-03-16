@@ -8,6 +8,8 @@ This is a work-in-progress.
 
 Requires Ubuntu 22.04 and ROS Humble.
 
+See the [Dockerfile](Dockerfile) for install and build instructions.
+
 Tested with data from 2 sources:
 * A Gazebo Harmonic simulation with a simulated down-facing camera and a simulated IMU
 * Images taken by a down-facing GoPro Hero2 ~1m above the benthos in the Salish Sea
