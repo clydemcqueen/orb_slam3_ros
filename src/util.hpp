@@ -5,7 +5,7 @@
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
 #include "sophus/se3.hpp"
-#include "../modules/ORB_SLAM3/include/MapPoint.h"
+#include "include/MapPoint.h"
 
 double seconds(const builtin_interfaces::msg::Time &stamp);
 
