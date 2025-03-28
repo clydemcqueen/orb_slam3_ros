@@ -33,9 +33,11 @@ class MonoImuNode final : public rclcpp::Node
         "world");
     bool ignore_imu_header_ = declare_parameter<bool>("ignore_imu_header",
         false);
+    bool show_viewer_ = declare_parameter<bool>("show_viewer",
+        false);
 
     // Start ORB_SLAM3
-    ORB_SLAM3::System slam_{voc_file_, settings_file_, ORB_SLAM3::System::IMU_MONOCULAR, false};
+    ORB_SLAM3::System slam_{voc_file_, settings_file_, ORB_SLAM3::System::IMU_MONOCULAR, show_viewer_};
 
     // Keep track of SLAM state
     int tracking_state_{};

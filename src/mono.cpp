@@ -29,9 +29,11 @@ class MonoNode final : public rclcpp::Node
         "install/orb_slam3_ros/share/orb_slam3_ros/param/default_mono.yaml");
     std::string world_frame_id_ = declare_parameter<std::string>("world_frame_id",
         "world");
+    bool show_viewer_ = declare_parameter<bool>("show_viewer",
+        false);
 
     // Start ORB_SLAM3
-    ORB_SLAM3::System slam_{voc_file_, settings_file_, ORB_SLAM3::System::MONOCULAR, false};
+    ORB_SLAM3::System slam_{voc_file_, settings_file_, ORB_SLAM3::System::MONOCULAR, show_viewer_};
 
     // Keep track of SLAM state
     int tracking_state_{};
