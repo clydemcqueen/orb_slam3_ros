@@ -1,3 +1,3 @@
-prepend-non-duplicate;LD_LIBRARY_PATH;@PROJECT_BINARY_DIR@/modules/ORB_SLAM3
+prepend-non-duplicate;LD_LIBRARY_PATH;@PROJECT_SOURCE_DIR@/modules/ORB_SLAM3
 prepend-non-duplicate;LD_LIBRARY_PATH;@PROJECT_SOURCE_DIR@/modules/ORB_SLAM3/Thirdparty/DBoW2/lib
 prepend-non-duplicate;LD_LIBRARY_PATH;@PROJECT_SOURCE_DIR@/modules/ORB_SLAM3/Thirdparty/g2o/lib
