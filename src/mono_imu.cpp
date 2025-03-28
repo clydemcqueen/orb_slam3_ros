@@ -31,6 +31,8 @@ class MonoImuNode final : public rclcpp::Node
         "install/orb_slam3_ros/share/orb_slam3_ros/param/default_mono_imu.yaml");
     std::string world_frame_id_ = declare_parameter<std::string>("world_frame_id",
         "world");
+    bool ignore_imu_header_ = declare_parameter<bool>("ignore_imu_header",
+        false);
 
     // Start ORB_SLAM3
     ORB_SLAM3::System slam_{voc_file_, settings_file_, ORB_SLAM3::System::IMU_MONOCULAR, false};
@@ -52,8 +54,6 @@ class MonoImuNode final : public rclcpp::Node
 
     // Keep all the incoming IMU messages
     std::queue<sensor_msgs::msg::Imu::SharedPtr> imu_queue_;
-
-    // This is a hack for ArduPilot DDS: header.stamp can't be trusted, use the message arrival time instead
     std::queue<double> imu_timestamps_;
 
     // Start the SLAM thread
@@ -88,7 +88,12 @@ public:
             {
                 std::lock_guard lock(mutex_);
                 imu_queue_.push(msg);
-                imu_timestamps_.push(seconds(now()));
+                if (ignore_imu_header_) {
+                    // ArduPilot DDS header.stamp can't be trusted, use the message arrival time instead
+                    imu_timestamps_.push(seconds(now()));
+                } else {
+                    imu_timestamps_.push(seconds(msg->header.stamp));
+                }
             });
 
         RCLCPP_INFO(get_logger(), "ORB_SLAM3 mono_imu node running");
