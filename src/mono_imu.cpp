@@ -28,7 +28,7 @@ class MonoImuNode final : public rclcpp::Node
     std::string voc_file_ = declare_parameter<std::string>("voc_file",
         "src/orb_slam3_ros/modules/ORB_SLAM3/Vocabulary/ORBvoc.txt");
     std::string settings_file_ = declare_parameter<std::string>("settings_file",
-        "install/orb_slam3_ros/share/orb_slam3_ros/param/default_mono_imu.yaml");
+        "install/orb_slam3_ros/share/orb_slam3_ros/param/euroc_mav.yaml");
     std::string world_frame_id_ = declare_parameter<std::string>("world_frame_id",
         "world");
     bool ignore_imu_header_ = declare_parameter<bool>("ignore_imu_header",

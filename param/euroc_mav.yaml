@@ -1,7 +1,8 @@
 %YAML:1.0
 ---
 
-# Default parameters for an ideal 800x600 image, e.g., from a simulation
+# For EuRoC MAV ROS2 bags. Data is included for 1 camera (/cam0/image_raw) and the IMU.
+# Source: https://github.com/rpng/open_vins/tree/master/config/euroc_mav
 
 # This yaml file is opened by ORB_SLAM3 (these are not ROS parameters)
 
@@ -14,25 +15,25 @@ File.version: "1.0"
 Camera.type: "PinHole"
 
 # Camera calibration and distortion parameters (OpenCV)
-Camera1.fx: 474.897
-Camera1.fy: 474.897
-Camera1.cx: 400.5
-Camera1.cy: 300.5
+Camera1.fx: 458.654
+Camera1.fy: 457.296
+Camera1.cx: 367.215
+Camera1.cy: 248.375
 
-Camera1.k1: 0.0
-Camera1.k2: 0.0
-Camera1.p1: 0.0
-Camera1.p2: 0.0
+Camera1.k1: -0.28340811
+Camera1.k2: 0.07395907
+Camera1.p1: 0.00019359
+Camera1.p2: 1.76187114e-05
 Camera1.k3: 0.0
 
-Camera.width: 800
-Camera.height: 600
+Camera.width: 752
+Camera.height: 480
 
-Camera.newWidth: 800
-Camera.newHeight: 600
+Camera.newWidth: 752
+Camera.newHeight: 480
 
 # Camera frames per second
-Camera.fps: 30
+Camera.fps: 20
 
 # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
 Camera.RGB: 1
@@ -43,19 +44,19 @@ Camera.RGB: 1
 
 # Transformation from camera to imu frame
 IMU.T_b_c1: !!opencv-matrix
-   rows: 4
-   cols: 4
-   dt: f
-   data: [ 0., -1.,  0.,  0.,
-          -1.,  0.,  0.,  0.,
-           0.,  0., -1.,  0.,
-           0.,  0.,  0.,  1.]
+  rows: 4
+  cols: 4
+  dt: f
+  data: [ 0.0148655429818, -0.999880929698,    0.00414029679422, -0.0216401454975,
+          0.999557249008,   0.0149672133247,   0.025715529948,   -0.064676986768,
+         -0.0257744366974,  0.00375618835797,  0.999660727178,    0.00981073058949,
+          0.,  0.,  0.,  1.]
 
-# IMU noise TODO
-IMU.NoiseGyro: 1.7e-4
-IMU.NoiseAcc: 2.0000e-33
-IMU.GyroWalk: 1.9393e-05
-IMU.AccWalk: 3.0000e-03
+# IMU noise
+IMU.NoiseGyro: 1.6968e-4
+IMU.NoiseAcc: 2.0e-3
+IMU.GyroWalk: 1.9393e-5
+IMU.AccWalk: 3.0e-3
 
 # IMU messages per second
 # Must be a real number
@@ -82,7 +83,7 @@ ORBextractor.iniThFAST: 20
 ORBextractor.minThFAST: 7
 
 #--------------------------------------------------------------------------------------------
-# Viewer Parameters (not used by orb_slam3_ros fork)
+# Viewer Parameters
 #---------------------------------------------------------------------------------------------
 Viewer.KeyFrameSize: 0.05
 Viewer.KeyFrameLineWidth: 1.0

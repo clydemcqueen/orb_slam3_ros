@@ -38,6 +38,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-compare")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-parentheses")
 
 # Mono driver
 add_executable(orb_slam3_ros_mono
@@ -97,7 +98,7 @@ ament_environment_hooks(hooks/setup.dsv.in)
 install(TARGETS orb_slam3_ros_mono orb_slam3_ros_mono_imu
   DESTINATION lib/${PROJECT_NAME})
 
-# The param directory includes default ORB_SLAM3 params
-install(DIRECTORY param DESTINATION share/${PROJECT_NAME})
+# Copy several directories
+install(DIRECTORY launch param rviz DESTINATION share/${PROJECT_NAME})
 
 ament_package()
