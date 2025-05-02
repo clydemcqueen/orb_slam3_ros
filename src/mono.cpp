@@ -47,7 +47,7 @@ public:
         map_pub_ = create_publisher<sensor_msgs::msg::PointCloud2>("map_points", 10);
 
         image_sub_ = create_subscription<sensor_msgs::msg::Image>(
-            "/image_raw", 10,
+            "image_raw", 10,
             [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void { process_image(msg); });
     }
 

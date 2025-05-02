@@ -70,7 +70,7 @@ public:
         map_pub_ = create_publisher<sensor_msgs::msg::PointCloud2>("map_points", 10);
 
         image_sub_ = create_subscription<sensor_msgs::msg::Image>(
-            "/image_raw", 10,
+            "image_raw", 10,
             [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void
             {
                 std::lock_guard lock(mutex_);
@@ -85,7 +85,7 @@ public:
         imu_qos.best_effort();
 
         imu_sub_ = create_subscription<sensor_msgs::msg::Imu>(
-            "/imu", imu_qos,
+            "imu", imu_qos,
             [this](const sensor_msgs::msg::Imu::SharedPtr msg) -> void
             {
                 std::lock_guard lock(mutex_);
