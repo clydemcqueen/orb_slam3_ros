@@ -86,7 +86,7 @@ target_link_libraries(orb_slam3_ros_mono_imu
   ORB_SLAM3
 )
 
-# libORB_SLAM3.so is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3
+# libORB_SLAM3.so is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/lib
 # libg2o.so       is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/Thirdparty/g2o/lib
 # libDBoW2.so     is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/Thirdparty/DBoW2/lib
 
