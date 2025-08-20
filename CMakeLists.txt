@@ -29,6 +29,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(image_geometry REQUIRED)
+find_package(message_filters REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(Pangolin REQUIRED)
@@ -86,6 +88,31 @@ target_link_libraries(orb_slam3_ros_mono_imu
   ORB_SLAM3
 )
 
+# Stereo driver
+add_executable(orb_slam3_ros_stereo
+  src/stereo.cpp
+  src/util.cpp)
+
+target_include_directories(orb_slam3_ros_stereo
+  PRIVATE
+  ${DBoW2_SOURCE_DIR}
+  ${ORB_SLAM3_SOURCE_DIR}
+  ${ORB_SLAM3_SOURCE_DIR}/include
+  ${ORB_SLAM3_SOURCE_DIR}/include/CameraModels
+  ${Sophus_SOURCE_DIR}
+)
+
+target_link_libraries(orb_slam3_ros_stereo
+  PRIVATE
+  cv_bridge::cv_bridge
+  Eigen3::Eigen
+  image_geometry::image_geometry
+  message_filters::message_filters
+  rclcpp::rclcpp
+  sensor_msgs::sensor_msgs_library
+  ORB_SLAM3
+)
+
 # libORB_SLAM3.so is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/lib
 # libg2o.so       is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/Thirdparty/g2o/lib
 # libDBoW2.so     is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/Thirdparty/DBoW2/lib
@@ -95,7 +122,7 @@ target_link_libraries(orb_slam3_ros_mono_imu
 # Use a hook to set up LD_LIBRARY_PATH so the linker can find the so files
 ament_environment_hooks(hooks/setup.dsv.in)
 
-install(TARGETS orb_slam3_ros_mono orb_slam3_ros_mono_imu
+install(TARGETS orb_slam3_ros_mono orb_slam3_ros_mono_imu orb_slam3_ros_stereo
   DESTINATION lib/${PROJECT_NAME})
 
 # Copy several directories
