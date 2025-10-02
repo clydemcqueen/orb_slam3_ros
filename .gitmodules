@@ -1,9 +1,5 @@
 [submodule "modules/ORB_SLAM3"]
 	path = modules/ORB_SLAM3
 	url = https://github.com/clydemcqueen/ORB_SLAM3.git
-	branch = main
-[submodule "modules/Pangolin"]
-	path = modules/Pangolin
-	url = https://github.com/clydemcqueen/Pangolin.git
-	branch = build_orb_slam3
+	branch = no_pangolin
 
