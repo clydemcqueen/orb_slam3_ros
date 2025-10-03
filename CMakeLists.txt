@@ -86,14 +86,7 @@ target_link_libraries(orb_slam3_ros_mono_imu
   ORB_SLAM3
 )
 
-# libORB_SLAM3.so is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/lib
-# libg2o.so       is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/Thirdparty/g2o/lib
-# libDBoW2.so     is built in colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/Thirdparty/DBoW2/lib
-
-# libpangolin.so  is installed to colcon_ws/install/orb_slam3_ros/lib
-
-# Use a hook to set up LD_LIBRARY_PATH so the linker can find the so files
-ament_environment_hooks(hooks/setup.dsv.in)
+install(TARGETS ORB_SLAM3 g2o DBoW2 DESTINATION lib/${PROJECT_NAME})
 
 install(TARGETS orb_slam3_ros_mono orb_slam3_ros_mono_imu
   DESTINATION lib/${PROJECT_NAME})
