@@ -6,9 +6,9 @@ This package provides 2 simple monocular ROS2 drivers for [ORB_SLAM3](https://gi
 
 ## Prerequisites
 
-Requires Ubuntu 22.04 and ROS2 Humble.
+Requires Ubuntu 24.04 and ROS2 Jazzy.
 
-ORB_SLAM3 and Pangolin v0.6 are included as git submodules, so you do not need to install them.
+ORB_SLAM3 is included as a git submodule, so you do not need to install it.
 
 ## Install
 
@@ -21,10 +21,10 @@ tar -xvf ORBvoc.txt.tar.gz
 
 ## Build
 
-This will use Colcon to build everything, including Pangolin, ORB_SLAM3, g2o, and DBoW2:
+This will use Colcon to build everything, including ORB_SLAM3, g2o, and DBoW2:
 ~~~
 cd ~/workspaces/colcon_ws
-source /opt/ros/humble/setup.bash
+source /opt/ros/jazzy/setup.bash
 colcon build
 ~~~
 
@@ -37,13 +37,13 @@ In terminal 1:
 ~~~
 cd ~/workspaces/colcon_ws
 source install/setup.bash
-ros2 launch orb_slam3_ros euroc_mav.py use_imu_data:=True show_viewer:=True
+ros2 launch orb_slam3_ros euroc_mav.py use_imu_data:=True
 ~~~
 
 In terminal 2:
 ~~~
 cd ~/path/to/bag
-source /opt/ros/humble/setup.bash
+source /opt/ros/jazzy/setup.bash
 ros2 bag play V1_01_easy
 ~~~
 
@@ -51,3 +51,4 @@ ros2 bag play V1_01_easy
 
 * There are no stereo nodes
 * ORB_SLAM3 leaks RAM, see the [TODOs in Map.cc](https://github.com/UZ-SLAMLab/ORB_SLAM3/blob/4452a3c4ab75b1cde34e5505a36ec3f9edcdc4c4/src/Map.cc#L103) for an example
+* Pangolin is not supported
