@@ -86,7 +86,7 @@ target_link_libraries(orb_slam3_ros_mono_imu
   ORB_SLAM3
 )
 
-install(TARGETS ORB_SLAM3 g2o DBoW2 DESTINATION lib/${PROJECT_NAME})
+install(TARGETS ORB_SLAM3 g2o DBoW2 DESTINATION lib)
 
 install(TARGETS orb_slam3_ros_mono orb_slam3_ros_mono_imu
   DESTINATION lib/${PROJECT_NAME})

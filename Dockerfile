@@ -1,13 +1,13 @@
 # To build:
 # docker build --no-cache --tag orb_slam3_ros:latest .
 
-FROM osrf/ros:humble-desktop AS base
+FROM osrf/ros:jazzy-desktop AS base
 
 RUN apt-get update && apt-get upgrade -y
 
 WORKDIR /work/colcon_ws/src
 
-RUN git clone --recurse-submodules https://github.com/clydemcqueen/orb_slam3_ros.git
+COPY . /work/colcon_ws/src/orb_slam3_ros
 
 WORKDIR /work/colcon_ws/src/orb_slam3_ros/modules/ORB_SLAM3/Vocabulary
 
@@ -17,7 +17,7 @@ WORKDIR /work/colcon_ws
 
 RUN rosdep install -y --from-paths . --ignore-src
 
-RUN /bin/bash -c "source /opt/ros/humble/setup.bash && colcon build"
+RUN /bin/bash -c "source /opt/ros/jazzy/setup.bash && colcon build"
 
 # Smoke test (does it run):
 # docker run -it orb_slam3_ros:latest /bin/bash
