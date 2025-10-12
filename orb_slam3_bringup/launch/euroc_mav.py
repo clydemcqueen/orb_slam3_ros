@@ -15,19 +15,13 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    project_dir = get_package_share_directory('orb_slam3_ros')
+    project_dir = get_package_share_directory('orb_slam3_bringup')
 
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_imu_data',
             default_value='False',
             description='Use IMU data?'
-        ),
-
-        DeclareLaunchArgument(
-            'show_viewer',
-            default_value='True',
-            description='Show Pangolin viewer?'
         ),
 
         Node(
@@ -44,7 +38,6 @@ def generate_launch_description():
             parameters=[{
                 'settings_file': os.path.join(project_dir, 'param', 'euroc_mav.yaml'),
                 'world_frame_id': 'map',
-                'show_viewer': LaunchConfiguration('show_viewer'),
             }],
             remappings=[
                 ('/image_raw', '/cam0/image_raw'),
@@ -59,7 +52,6 @@ def generate_launch_description():
             parameters=[{
                 'settings_file': os.path.join(project_dir, 'param', 'euroc_mav.yaml'),
                 'world_frame_id': 'map',
-                'show_viewer': LaunchConfiguration('show_viewer'),
             }],
             remappings=[
                 ('/image_raw', '/cam0/image_raw'),

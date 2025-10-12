@@ -6,9 +6,6 @@ set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 
 message(STATUS "${PROJECT_NAME} build type: " ${CMAKE_BUILD_TYPE})
 
-# Also build Pangolin
-# add_subdirectory(modules/Pangolin)
-
 # Also build ORB_SLAM3 and ORB_SLAM3/Thirdparty
 add_subdirectory(modules/ORB_SLAM3)
 
@@ -31,7 +28,6 @@ find_package(cv_bridge REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-# find_package(Pangolin REQUIRED)
 
 # Some of the ORB_SLAM3 headers generate warnings, disable these for now
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
@@ -90,8 +86,5 @@ install(TARGETS ORB_SLAM3 g2o DBoW2 DESTINATION lib)
 
 install(TARGETS orb_slam3_ros_mono orb_slam3_ros_mono_imu
   DESTINATION lib/${PROJECT_NAME})
-
-# Copy several directories
-install(DIRECTORY launch param rviz DESTINATION share/${PROJECT_NAME})
 
 ament_package()

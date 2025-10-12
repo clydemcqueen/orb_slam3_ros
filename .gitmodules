@@ -1,4 +1,4 @@
 [submodule "modules/ORB_SLAM3"]
-	path = modules/ORB_SLAM3
+	path = orb_slam3_ros/modules/ORB_SLAM3
 	url = https://github.com/clydemcqueen/ORB_SLAM3.git
 	branch = main
