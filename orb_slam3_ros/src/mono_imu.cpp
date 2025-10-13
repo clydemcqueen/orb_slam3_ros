@@ -25,11 +25,10 @@ class MonoImuNode final : public rclcpp::Node
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr map_pub_;
 
     // Declare and retrieve ROS parameters
-    // TODO install ORBvoc.txt
     std::string voc_file_ = declare_parameter<std::string>("voc_file",
-        "src/orb_slam3_ros/orb_slam3_ros/modules/ORB_SLAM3/Vocabulary/ORBvoc.txt");
+        "install/orb_slam3_ros/share/orb_slam3_ros/Vocabulary/ORBvoc.txt");
     std::string settings_file_ = declare_parameter<std::string>("settings_file",
-        "install/orb_slam3_ros/share/orb_slam3_ros/param/euroc_mav.yaml");
+        "install/orb_slam3_bringup/share/orb_slam3_bringup/param/euroc_mav.yaml");
     std::string world_frame_id_ = declare_parameter<std::string>("world_frame_id",
         "world");
     bool ignore_imu_header_ = declare_parameter<bool>("ignore_imu_header",

@@ -84,6 +84,10 @@ target_link_libraries(orb_slam3_ros_mono_imu
 
 install(TARGETS ORB_SLAM3 g2o DBoW2 DESTINATION lib)
 
+# Install the ORB_SLAM3 vocabulary
+install(FILES ${CMAKE_BINARY_DIR}/Vocabulary/ORBvoc.txt
+  DESTINATION share/${PROJECT_NAME}/Vocabulary)
+
 install(TARGETS orb_slam3_ros_mono orb_slam3_ros_mono_imu
   DESTINATION lib/${PROJECT_NAME})
 
