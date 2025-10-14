@@ -18,9 +18,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  # Turn off pedantic for now
-  # add_compile_options(-Wall -Wextra -Wpedantic)
-  add_compile_options(-Wall -Wextra)
+   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 find_package(ament_cmake REQUIRED)
@@ -29,20 +27,14 @@ find_package(Eigen3 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-# Some of the ORB_SLAM3 headers generate warnings, disable these for now
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-reorder")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-compare")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-parentheses")
-
 # Mono driver
 add_executable(orb_slam3_ros_mono
   src/mono.cpp
   src/util.cpp)
 
+# Some of the ORB_SLAM3 headers generate warnings, mark them SYSTEM for now
 target_include_directories(orb_slam3_ros_mono
-  PRIVATE
+  SYSTEM PRIVATE
   ${DBoW2_SOURCE_DIR}
   ${ORB_SLAM3_SOURCE_DIR}
   ${ORB_SLAM3_SOURCE_DIR}/include
@@ -64,8 +56,9 @@ add_executable(orb_slam3_ros_mono_imu
   src/mono_imu.cpp
   src/util.cpp)
 
+# Some of the ORB_SLAM3 headers generate warnings, mark them SYSTEM for now
 target_include_directories(orb_slam3_ros_mono_imu
-  PRIVATE
+  SYSTEM PRIVATE
   ${DBoW2_SOURCE_DIR}
   ${ORB_SLAM3_SOURCE_DIR}
   ${ORB_SLAM3_SOURCE_DIR}/include
