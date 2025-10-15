@@ -35,8 +35,9 @@ class MonoNode final : public rclcpp::Node
     // Start ORB_SLAM3
     ORB_SLAM3::System slam_{voc_file_, settings_file_, ORB_SLAM3::System::MONOCULAR, show_viewer_};
 
-    // Keep track of SLAM state
+    // Keep track of the SLAM state
     int tracking_state_{};
+    unsigned long map_id_{};
 
 public:
 
@@ -71,10 +72,21 @@ public:
         // const auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
         const auto tracking_state = slam_.GetTrackingState();
+        const auto map_id = slam_.GetMapID();
+        const auto map_changed = slam_.MapChanged();
 
         if (tracking_state != tracking_state_) {
             RCLCPP_INFO(get_logger(), "Tracking state changed from %d to %d", tracking_state_, tracking_state);
             tracking_state_ = tracking_state;
+        }
+
+        if (map_id != map_id_) {
+            RCLCPP_INFO(get_logger(), "Map id changed from %ld to %ld", map_id_, map_id);
+            map_id_ = map_id;
+        }
+
+        if (map_changed) {
+            RCLCPP_INFO(get_logger(), "Map changed");
         }
 
         if (tracking_state == ORB_SLAM3::Tracking::eTrackingState::OK) {
@@ -98,7 +110,9 @@ public:
 
     void publish_map(const builtin_interfaces::msg::Time stamp)
     {
-        const auto map_points = slam_.GetTrackedMapPoints();
+        // Publish the current map, this will include all points in the map, not just tracked points
+        // const auto map_points = slam_.GetTrackedMapPoints();
+        const auto map_points = slam_.GetCurrentMapPoints();
         const auto msg = to_msg(stamp, world_frame_id_, map_points);
         map_pub_->publish(msg);
     }
