@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.12.2)
 project(orb_slam3_ros)
 
 # Hack: g2o crashes if CMAKE_BUILD_TYPE is Release, but not for Debug (slow) or RelWithDebInfo (fast)
@@ -25,7 +25,18 @@ find_package(ament_cmake REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(orb_slam3_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+
+# Debugging: set _dump_all_variables to true
+set(_dump_all_variables true)
+if(_dump_all_variables)
+  get_cmake_property(_variable_names VARIABLES)
+  list(SORT _variable_names)
+  foreach(_variable_name ${_variable_names})
+    message(STATUS "${_variable_name}=${${_variable_name}}")
+  endforeach()
+endif()
 
 # Mono driver
 add_executable(orb_slam3_ros_mono
@@ -40,6 +51,7 @@ target_include_directories(orb_slam3_ros_mono
   ${ORB_SLAM3_SOURCE_DIR}/include
   ${ORB_SLAM3_SOURCE_DIR}/include/CameraModels
   ${Sophus_SOURCE_DIR}
+  ${orb_slam3_msgs_INCLUDE_DIRS}
 )
 
 target_link_libraries(orb_slam3_ros_mono
@@ -49,6 +61,7 @@ target_link_libraries(orb_slam3_ros_mono
   rclcpp::rclcpp
   sensor_msgs::sensor_msgs_library
   ORB_SLAM3
+  ${orb_slam3_msgs_LIBRARIES}
 )
 
 # Mono IMU driver

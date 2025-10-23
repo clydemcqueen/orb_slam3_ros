@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.12.2)
 project(orb_slam3_bringup)
 
 find_package(ament_cmake REQUIRED)
