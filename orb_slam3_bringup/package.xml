@@ -3,8 +3,8 @@
 <package format="3">
   <name>orb_slam3_bringup</name>
   <version>0.1.0</version>
-  <description>Mono ROS2 ORB_SLAM3 bringup</description>
-  <maintainer email="clyde@mcqueen.net">clyde</maintainer>
+  <description>ROS2 ORB_SLAM3 launch files</description>
+  <maintainer email="clyde@mcqueen.net">Clyde McQueen</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

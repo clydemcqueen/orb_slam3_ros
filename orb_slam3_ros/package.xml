@@ -3,14 +3,15 @@
 <package format="3">
   <name>orb_slam3_ros</name>
   <version>0.1.0</version>
-  <description>Mono ROS2 ORB_SLAM3 driver</description>
-  <maintainer email="clyde@mcqueen.net">clyde</maintainer>
+  <description>ROS2 ORB_SLAM3 driver</description>
+  <maintainer email="clyde@mcqueen.net">Clyde McQueen</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>eigen</depend>
   <depend>cv_bridge</depend>
+  <depend>orb_slam3_msgs</depend>
   <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
 
