@@ -29,7 +29,7 @@ find_package(orb_slam3_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 # Debugging: set _dump_all_variables to true
-set(_dump_all_variables true)
+set(_dump_all_variables false)
 if(_dump_all_variables)
   get_cmake_property(_variable_names VARIABLES)
   list(SORT _variable_names)
