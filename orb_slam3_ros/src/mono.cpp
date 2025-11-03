@@ -67,14 +67,14 @@ public:
         }
 
         // Send the image, get the transform from the camera frame to the world frame (aka Tcw)
-        // const auto start = std::chrono::high_resolution_clock::now();
         const auto t_cam_world = slam_.TrackMonocular(cv_ptr->image, image_timestamp);
-        // const auto end = std::chrono::high_resolution_clock::now();
-        // const auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
+        // Get additional state information
         const auto tracking_state = slam_.GetTrackingState();
         const auto map_id = slam_.GetMapID();
         const auto map_changed = slam_.MapChanged();
+        const auto tracked_points = slam_.GetTrackedMapPoints();
+        const auto map_points = slam_.GetCurrentMapPoints();
 
         if (tracking_state != tracking_state_) {
             RCLCPP_INFO(get_logger(), "Tracking state changed from %d to %d", tracking_state_, tracking_state);
@@ -90,53 +90,30 @@ public:
             RCLCPP_INFO(get_logger(), "Map changed");
         }
 
-        if (tracking_state == ORB_SLAM3::Tracking::eTrackingState::OK) {
-            // Publish results
-            publish_pose(image_msg->header.stamp, t_cam_world);  // TODO always publish?
-            publish_map(image_msg->header.stamp);
-        }
+        // Invert Tcw to get the pose of the camera in the world frame
+        const auto t_world_cam = t_cam_world.inverse();
 
-        // TODO refactor
-
+        // Publish a status message, this includes the camera pose and the tracked map points
         orb_slam3_msgs::msg::SlamStatus status_msg;
         status_msg.header.stamp = image_msg->header.stamp;
         status_msg.header.frame_id = world_frame_id_;
-
         status_msg.tracking_state = static_cast<int8_t>(tracking_state);
         status_msg.map_id = map_id;
         status_msg.map_changed = map_changed;
-
-        // Invert Tcw to get the pose of the camera in the world frame
-        const auto t_world_cam = t_cam_world.inverse();
         status_msg.pose = to_msg(t_world_cam);
-
-        // Be sure to send tracked points, smaller
-        const auto tracked_points = slam_.GetTrackedMapPoints();
-        const auto msg = to_msg(image_msg->header.stamp, world_frame_id_, tracked_points);
-        status_msg.tracked_points = msg;
-
+        status_msg.tracked_points = to_msg(image_msg->header.stamp, world_frame_id_, tracked_points);
         status_pub_->publish(status_msg);
-    }
 
-    void publish_pose(const builtin_interfaces::msg::Time stamp, const Sophus::SE3f& t_cam_world) const
-    {
-        // Invert Tcw to get the pose of the camera in the world frame
-        const auto t_world_cam = t_cam_world.inverse();
-
+        // Publish the camera pose for rviz
         geometry_msgs::msg::PoseStamped pose_msg;
         pose_msg.header.frame_id = world_frame_id_;
-        pose_msg.header.stamp = stamp;
+        pose_msg.header.stamp = image_msg->header.stamp;
         pose_msg.pose = to_msg(t_world_cam);
         cam_pub_->publish(pose_msg);
-    }
 
-    void publish_map(const builtin_interfaces::msg::Time stamp)
-    {
-        // Publish the current map, this will include all points in the map, not just tracked points
-        // const auto map_points = slam_.GetTrackedMapPoints();
-        const auto map_points = slam_.GetCurrentMapPoints();
-        const auto msg = to_msg(stamp, world_frame_id_, map_points);
-        map_pub_->publish(msg);
+        // Publish the entire map for rviz
+        map_pub_->publish(to_msg(image_msg->header.stamp, world_frame_id_, map_points));
+
     }
 };
 
