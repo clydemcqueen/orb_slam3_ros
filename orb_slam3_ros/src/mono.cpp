@@ -4,6 +4,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
+#include "std_srvs/srv/empty.hpp"
 
 // Heads up: modules/ORB_SLAM3/include/System.h and friends bring in the std namespace
 #include "include/System.h"
@@ -18,6 +19,9 @@ class MonoNode final : public rclcpp::Node
 {
     // Declare subscriptions
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_;
+
+    // Declare services
+    rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_service_;
 
     // Declare publications
     rclcpp::Publisher<orb_slam3_msgs::msg::SlamStatus>::SharedPtr status_pub_;
@@ -51,9 +55,22 @@ public:
         image_sub_ = create_subscription<sensor_msgs::msg::Image>(
             "image_raw", 10,
             [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void { process_image(msg); });
+
+        reset_service_ = create_service<std_srvs::srv::Empty>(
+            "reset_slam",
+            [this](const std::shared_ptr<std_srvs::srv::Empty::Request> request,
+                std::shared_ptr<std_srvs::srv::Empty::Response> response) -> void { reset(request, response); });
     }
 
-    void process_image(const sensor_msgs::msg::Image::SharedPtr image_msg)
+    void reset(
+        const std::shared_ptr<std_srvs::srv::Empty::Request>&,
+        const std::shared_ptr<std_srvs::srv::Empty::Response>&)
+    {
+        RCLCPP_INFO(get_logger(), "Reset SLAM");
+        slam_.Reset();
+    }
+
+    void process_image(const sensor_msgs::msg::Image::SharedPtr& image_msg)
     {
         const auto image_timestamp = seconds(image_msg->header.stamp);
 

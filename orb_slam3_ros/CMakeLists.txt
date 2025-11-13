@@ -27,6 +27,7 @@ find_package(Eigen3 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(orb_slam3_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 # Debugging: set _dump_all_variables to true
 set(_dump_all_variables false)
@@ -52,6 +53,7 @@ target_include_directories(orb_slam3_ros_mono
   ${ORB_SLAM3_SOURCE_DIR}/include/CameraModels
   ${Sophus_SOURCE_DIR}
   ${orb_slam3_msgs_INCLUDE_DIRS}
+  ${std_srvs_INCLUDE_DIRS}
 )
 
 target_link_libraries(orb_slam3_ros_mono
@@ -62,6 +64,7 @@ target_link_libraries(orb_slam3_ros_mono
   sensor_msgs::sensor_msgs_library
   ORB_SLAM3
   ${orb_slam3_msgs_LIBRARIES}
+  ${std_srvs_LIBRARIES}
 )
 
 # Mono IMU driver
