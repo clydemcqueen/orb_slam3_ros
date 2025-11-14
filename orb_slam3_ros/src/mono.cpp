@@ -27,6 +27,7 @@ class MonoNode final : public rclcpp::Node
     rclcpp::Publisher<orb_slam3_msgs::msg::SlamStatus>::SharedPtr status_pub_;
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr cam_pub_;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr map_pub_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_pub_;
 
     // Declare and retrieve ROS parameters
     std::string voc_file_ = declare_parameter<std::string>("voc_file",
@@ -51,6 +52,7 @@ public:
         status_pub_ = create_publisher<orb_slam3_msgs::msg::SlamStatus>("slam_status", 10);
         cam_pub_ = create_publisher<geometry_msgs::msg::PoseStamped>("camera_pose", 10);
         map_pub_ = create_publisher<sensor_msgs::msg::PointCloud2>("map_points", 10);
+        image_pub_ = create_publisher<sensor_msgs::msg::Image>("annotated_image", 10);
 
         image_sub_ = create_subscription<sensor_msgs::msg::Image>(
             "image_raw", 10,
@@ -131,6 +133,9 @@ public:
         // Publish the entire map for rviz
         map_pub_->publish(to_msg(image_msg->header.stamp, world_frame_id_, map_points));
 
+        // Publish the annotated image
+        auto annotated_image_msg = cv_bridge::CvImage(image_msg->header, "bgr8", slam_.DrawFrame()).toImageMsg();
+        image_pub_->publish(*annotated_image_msg);
     }
 };
 
