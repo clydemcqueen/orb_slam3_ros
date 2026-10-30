@@ -1,6 +1,7 @@
 #include "cv_bridge/cv_bridge.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "orb_slam3_msgs/msg/slam_status.hpp"
+#include "rcl_interfaces/msg/set_parameters_result.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
@@ -36,6 +37,8 @@ class MonoNode final : public rclcpp::Node
         "install/orb_slam3_bringup/share/orb_slam3_bringup/param/euroc_mav.yaml");
     std::string world_frame_id_ = declare_parameter<std::string>("world_frame_id",
         "world");
+    bool enable_slam_ = declare_parameter<bool>("enable_slam", true);
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
 
     // Start ORB_SLAM3
     ORB_SLAM3::System slam_{voc_file_, settings_file_, ORB_SLAM3::System::MONOCULAR, false};
@@ -54,6 +57,11 @@ public:
         map_pub_ = create_publisher<sensor_msgs::msg::PointCloud2>("map_points", 10);
         image_pub_ = create_publisher<sensor_msgs::msg::Image>("annotated_image", 10);
 
+        param_callback_handle_ = add_on_set_parameters_callback(
+            [this](const std::vector<rclcpp::Parameter>& params) -> rcl_interfaces::msg::SetParametersResult {
+                return parameters_callback(params);
+            });
+
         image_sub_ = create_subscription<sensor_msgs::msg::Image>(
             "image_raw", 10,
             [this](const sensor_msgs::msg::Image::SharedPtr msg) -> void { process_image(msg); });
@@ -62,6 +70,46 @@ public:
             "reset_slam",
             [this](const std::shared_ptr<std_srvs::srv::Empty::Request> request,
                 std::shared_ptr<std_srvs::srv::Empty::Response> response) -> void { reset(request, response); });
+
+        RCLCPP_INFO(get_logger(), "ORB_SLAM3 mono node ready (enable_slam=%s)", enable_slam_ ? "true" : "false");
+    }
+
+    rcl_interfaces::msg::SetParametersResult parameters_callback(const std::vector<rclcpp::Parameter>& params)
+    {
+        rcl_interfaces::msg::SetParametersResult result;
+        result.successful = true;
+        for (const auto& param : params) {
+            if (param.get_name() == "enable_slam") {
+                if (param.get_type() != rclcpp::ParameterType::PARAMETER_BOOL) {
+                    result.successful = false;
+                    result.reason = "enable_slam must be a boolean";
+                    return result;
+                }
+                const bool new_val = param.as_bool();
+                if (new_val != enable_slam_) {
+                    RCLCPP_INFO(get_logger(), "enable_slam changed from %s to %s",
+                        enable_slam_ ? "true" : "false", new_val ? "true" : "false");
+                    enable_slam_ = new_val;
+                    if (!enable_slam_) {
+                        slam_.Reset();
+                        if (tracking_state_ != orb_slam3_msgs::msg::SlamStatus::TRACKING_NO_IMAGES_YET) {
+                            RCLCPP_INFO(get_logger(), "Tracking state changed from %d to %d",
+                                tracking_state_, orb_slam3_msgs::msg::SlamStatus::TRACKING_NO_IMAGES_YET);
+                            tracking_state_ = orb_slam3_msgs::msg::SlamStatus::TRACKING_NO_IMAGES_YET;
+
+                            orb_slam3_msgs::msg::SlamStatus status_msg;
+                            status_msg.header.stamp = now();
+                            status_msg.header.frame_id = world_frame_id_;
+                            status_msg.tracking_state = orb_slam3_msgs::msg::SlamStatus::TRACKING_NO_IMAGES_YET;
+                            status_msg.map_id = map_id_;
+                            status_msg.map_changed = false;
+                            status_pub_->publish(status_msg);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     void reset(
@@ -74,6 +122,10 @@ public:
 
     void process_image(const sensor_msgs::msg::Image::SharedPtr& image_msg)
     {
+        if (!enable_slam_) {
+            return;
+        }
+
         const auto image_timestamp = seconds(image_msg->header.stamp);
 
         cv_bridge::CvImageConstPtr cv_ptr;
