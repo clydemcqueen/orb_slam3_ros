@@ -14,6 +14,9 @@ int8 tracking_state
 # Map change, e.g., loop closure or bundle adjustment
 bool map_changed
 
+# True once inertial initialization has completed (always false for non-inertial modes)
+bool imu_initialized
+
 # Current map id
 uint32 map_id
 
