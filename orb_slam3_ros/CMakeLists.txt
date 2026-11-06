@@ -80,6 +80,8 @@ target_include_directories(orb_slam3_ros_mono_imu
   ${ORB_SLAM3_SOURCE_DIR}/include
   ${ORB_SLAM3_SOURCE_DIR}/include/CameraModels
   ${Sophus_SOURCE_DIR}
+  ${orb_slam3_msgs_INCLUDE_DIRS}
+  ${std_srvs_INCLUDE_DIRS}
 )
 
 target_link_libraries(orb_slam3_ros_mono_imu
@@ -89,6 +91,8 @@ target_link_libraries(orb_slam3_ros_mono_imu
   rclcpp::rclcpp
   sensor_msgs::sensor_msgs_library
   ORB_SLAM3
+  ${orb_slam3_msgs_LIBRARIES}
+  ${std_srvs_LIBRARIES}
 )
 
 install(TARGETS ORB_SLAM3 g2o DBoW2 DESTINATION lib)

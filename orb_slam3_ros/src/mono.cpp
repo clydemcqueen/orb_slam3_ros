@@ -103,6 +103,7 @@ public:
                             status_msg.tracking_state = orb_slam3_msgs::msg::SlamStatus::TRACKING_NO_IMAGES_YET;
                             status_msg.map_id = map_id_;
                             status_msg.map_changed = false;
+                            status_msg.imu_initialized = false;
                             status_pub_->publish(status_msg);
                         }
                     }
@@ -171,6 +172,7 @@ public:
         status_msg.tracking_state = static_cast<int8_t>(tracking_state);
         status_msg.map_id = map_id;
         status_msg.map_changed = map_changed;
+        status_msg.imu_initialized = false;
         status_msg.pose = to_msg(t_world_cam);
         status_msg.tracked_points = to_msg(image_msg->header.stamp, world_frame_id_, tracked_points);
         status_pub_->publish(status_msg);
